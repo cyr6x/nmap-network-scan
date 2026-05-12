@@ -1,4 +1,7 @@
 # Nmap Network Reconnaissance Lab
+
+![Nmap](https://img.shields.io/badge/Tool-Nmap%207.98-blue?style=flat-square&logo=linux) ![Platform](https://img.shields.io/badge/Platform-Kali%20Linux%202024-purple?style=flat-square&logo=kalilinux) ![Status](https://img.shields.io/badge/Status-Complete-brightgreen?style=flat-square) ![License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square) ![MITRE ATT&CK](https://img.shields.io/badge/MITRE%20ATT%26CK-T1595%20%7C%20T1046-red?style=flat-square)
+
 **Port Scanning | Service Enumeration | OS Fingerprinting | Attack Surface Analysis**
 
 > Structured network reconnaissance lab using Nmap against a Kali Linux localhost and QEMU virtual gateway — simulating the initial scanning phase of a penetration test or vulnerability assessment.
@@ -49,6 +52,7 @@ nmap 127.0.0.1
 ```
 
 **Findings:**
+
 ```
 PORT   STATE SERVICE
 22/tcp open  ssh
@@ -60,10 +64,10 @@ Scan time: 0.08s
 - Port 22 immediately visible once the service was enabled
 - All other ports closed — minimal attack surface
 
-**Security Interpretation:**  
+**Security Interpretation:**
 A basic scan reveals exactly what an unauthenticated attacker sees first. With only SSH running, the attack surface is limited to one service — but that one open port is enough for brute-force, credential stuffing, or version-specific exploits.
 
-![Basic Nmap Scan — Port 22 Open](screenshots/01-ssh-start-basic-scan.png)
+![Basic Nmap Scan — Port 22 Open](screenshots/8..bmp)
 
 ---
 
@@ -74,19 +78,20 @@ sudo nmap -sV 127.0.0.1
 ```
 
 **Findings:**
+
 ```
-PORT    STATE  SERVICE  VERSION
-22/tcp  open   ssh      OpenSSH 10.2p1 Debian 5 (protocol 2.0)
+PORT   STATE SERVICE VERSION
+22/tcp open  ssh     OpenSSH 10.2p1 Debian 5 (protocol 2.0)
 ```
 
 - Exact software version exposed: **OpenSSH 10.2p1**
 - OS hint: **Debian Linux**
 - Protocol: **SSH v2.0**
 
-**Security Interpretation:**  
+**Security Interpretation:**
 Version disclosure is a critical misconfiguration. An attacker cross-references `OpenSSH 10.2p1` against CVE databases to find known vulnerabilities specific to that build. In production, SSH banners should be suppressed via `DebianBanner no` in `sshd_config`.
 
-![Nmap -sV — Service Version Disclosure](screenshots/02-nmap-sV-service-version.png)
+![Nmap -sV — Service Version Disclosure](screenshots/2..bmp)
 
 ---
 
@@ -97,17 +102,18 @@ sudo nmap -O 127.0.0.1
 ```
 
 **Findings:**
+
 ```
-Device type:      general purpose
-Running:          Linux 2.6.X|5.X
-OS details:       Linux 2.6.32, Linux 5.0 - 6.2
+Device type: general purpose
+Running: Linux 2.6.X|5.X
+OS details: Linux 2.6.32, Linux 5.0 - 6.2
 Network Distance: 0 hops
 ```
 
-**Security Interpretation:**  
+**Security Interpretation:**
 OS fingerprinting reveals the kernel version range, which attackers use to select kernel-specific privilege escalation CVEs. The broad match (`2.6.X|5.X`) is typical of virtualized environments where the TCP/IP stack signature is partially obscured by the hypervisor.
 
-![Nmap -O — OS Fingerprinting](screenshots/03-nmap-O-os-detection.png)
+![Nmap -O — OS Fingerprinting](screenshots/-0.jpg)
 
 ---
 
@@ -118,9 +124,10 @@ sudo nmap -A 127.0.0.1
 ```
 
 **Findings:**
+
 ```
-PORT    STATE  SERVICE  VERSION
-22/tcp  open   ssh      OpenSSH 10.2p1 Debian 5 (protocol 2.0)
+PORT   STATE SERVICE VERSION
+22/tcp open  ssh     OpenSSH 10.2p1 Debian 5 (protocol 2.0)
 OS CPE: cpe:/o:linux:linux_kernel
 OS details: Linux 2.6.32, Linux 5.0 - 6.2
 Scan time: 1.74s
@@ -130,10 +137,10 @@ Scan time: 1.74s
 - Most information-rich single scan — used in CTFs and professional pen tests
 - Scan time increased from 0.08s (basic) to 1.74s
 
-**Security Interpretation:**  
+**Security Interpretation:**
 Aggressive scanning gives a complete picture in one pass. Any IDS/IPS monitoring for port scans will almost certainly flag `-A` due to its volume and variety of probe types. In a real engagement this would be a deliberate, post-stealth-recon step.
 
-![Nmap -A — Aggressive Full Scan](screenshots/04-nmap-A-aggressive.png)
+![-A Scan — Aggressive Full Scan](screenshots/-A%20(Large).png)
 
 ---
 
@@ -144,13 +151,14 @@ nmap 10.0.2.2
 ```
 
 **Findings:**
+
 ```
-PORT     STATE     SERVICE
-135/tcp  open      msrpc
-445/tcp  open      microsoft-ds
-902/tcp  open      iss-realsecure
-912/tcp  open      apex-mesh
-5357/tcp open      wsdapi
+PORT      STATE    SERVICE
+135/tcp   open     msrpc
+445/tcp   open     microsoft-ds
+902/tcp   open     iss-realsecure
+912/tcp   open     apex-mesh
+5357/tcp  open     wsdapi
 995 filtered ports (no-response)
 MAC Address: 52:54:00:12:35:00 (QEMU virtual NIC)
 Scan time: 6.41s
@@ -168,7 +176,7 @@ Scan time: 6.41s
 
 > ⚠️ **Port 445 (SMB) is the most critical finding.** This is the exact attack vector exploited by EternalBlue (MS17-010) — the vulnerability behind WannaCry and NotPetya. On any production network, SMB must be blocked at the perimeter firewall and patched.
 
-![Nmap Gateway Scan — Ports 135, 445, 902, 912, 5357](screenshots/05-nmap-gateway-10.0.2.2.png)
+![Nmap Gateway Scan — Ports 135, 445, 902, 912, 5357](screenshots/5..bmp)
 
 ---
 
@@ -253,7 +261,7 @@ Scan time: 6.41s
 - [x] Port risk assessment completed
 - [x] MITRE ATT&CK mapping finalised
 - [x] Defender takeaways documented
-- [ ] Screenshots captured and pushed to `screenshots/`
+- [x] Screenshots captured and pushed to `screenshots/`
 
 ---
 
